@@ -1,0 +1,18 @@
+services:
+  backend:
+    container_name: backend
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+
+  db:
+    container_name: db
+    image: postgres:20
+    env_file:
+      - ./backend/.env
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+  volumes: pgdata
