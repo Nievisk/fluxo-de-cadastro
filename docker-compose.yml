@@ -6,13 +6,15 @@ services:
       - ./backend/.env
     volumes:
       - ./backend:/app
+      - /app/node_modules
 
   db:
     container_name: db
-    image: postgres:20
+    image: postgres:latest
     env_file:
       - ./backend/.env
     volumes:
       - pgdata:/var/lib/postgresql
 
-  volumes: pgdata
+volumes: 
+    pgdata:
