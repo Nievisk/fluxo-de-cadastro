@@ -11,7 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserdto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateUserdto {
+const login_user_dto_1 = require("./login-user-dto");
+class CreateUserdto extends login_user_dto_1.LoginUserDto {
 }
 exports.CreateUserdto = CreateUserdto;
 __decorate([
@@ -24,14 +25,3 @@ __decorate([
     (0, class_validator_1.Matches)(/^[a-zA-Z\s]{3,50}$/),
     __metadata("design:type", String)
 ], CreateUserdto.prototype, "last_name", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.MaxLength)(250),
-    __metadata("design:type", String)
-], CreateUserdto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[\p{S}\p{P}])[\p{L}\p{Nd}\p{S}\p{P}][^\s]{8,16}$/u),
-    __metadata("design:type", String)
-], CreateUserdto.prototype, "password", void 0);

@@ -9,20 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Registerdto = void 0;
+exports.LoginUserDto = void 0;
 const class_validator_1 = require("class-validator");
-class Registerdto {
+class LoginUserDto {
 }
-exports.Registerdto = Registerdto;
+exports.LoginUserDto = LoginUserDto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/[a-zA-Z\s]{3,50}/),
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.MaxLength)(250),
     __metadata("design:type", String)
-], Registerdto.prototype, "first_name", void 0);
+], LoginUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/[a-zA-Z\s]{3,50}/),
+    (0, class_validator_1.Matches)(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[\p{S}\p{P}])[\p{L}\p{Nd}\p{S}\p{P}][^\s]{8,16}$/u),
     __metadata("design:type", String)
-], Registerdto.prototype, "last_name", void 0);
-const a = 'abc';
-a.;
+], LoginUserDto.prototype, "password", void 0);

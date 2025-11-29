@@ -4,17 +4,24 @@ services:
     build: ./backend
     env_file:
       - ./backend/.env
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
     volumes:
       - ./backend:/app
       - /app/node_modules
 
-  db:
-    container_name: db
+  postgres:
+    container_name: postgres
     image: postgres:latest
+    ports:
+      - 5432:5432
+      - 5555:5555
     env_file:
       - ./backend/.env
     volumes:
-      - pgdata:/var/lib/postgresql
+      - db-data:/var/lib/postgresql
 
-volumes: 
-    pgdata:
+volumes:
+  db-data:

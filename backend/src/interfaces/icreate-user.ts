@@ -1,6 +1,6 @@
 export interface ICreateUser {
     first_name: string
-    last_name: String
+    last_name: string
     email: string
     password: string
 }

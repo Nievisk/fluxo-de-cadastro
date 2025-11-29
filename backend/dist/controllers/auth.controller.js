@@ -15,11 +15,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const create_user_dto_1 = require("../dtos/create-user-dto");
+const auth_service_1 = require("../services/auth.service");
+const login_user_dto_1 = require("../dtos/login-user-dto");
 let AuthController = class AuthController {
-    constructor() { }
-    async register(request, dto) { }
-    async login(request) { }
-    async logout(request) { }
+    constructor(authService) {
+        this.authService = authService;
+    }
+    async register(request, dto) {
+        await this.authService.register(dto);
+        return `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.`;
+    }
+    async login(request, response, dto) {
+        const accessToken = await this.authService.login(dto);
+        response.cookie("accesstoken", accessToken, {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 10,
+            secure: false,
+            sameSite: "lax"
+        });
+    }
+    async logout(request, response) {
+        response.clearCookie("accessToken");
+    }
+    async validate(request) {
+        await this.authService.validate(request.id);
+        return "Account validated successfully";
+    }
+    async findUser(request) {
+        return await this.authService.findUser(request.id);
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -27,24 +51,41 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request, create_user_dto_1.CreateUserdto]),
+    __metadata("design:paramtypes", [Object, create_user_dto_1.CreateUserdto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)("login"),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request]),
+    __metadata("design:paramtypes", [Object, Object, login_user_dto_1.LoginUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)("logout"),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
+__decorate([
+    (0, common_1.Put)("validate"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "validate", null);
+__decorate([
+    (0, common_1.Get)("user"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "findUser", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
