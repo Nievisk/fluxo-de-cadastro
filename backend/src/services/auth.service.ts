@@ -17,43 +17,61 @@ export class AuthService {
   ) { }
 
   async register(data: ICreateUser) {
-    const foundEmail = await this.prisma.user.findUnique({
-      where: { email: data.email }
-    })
+    const existing = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
 
-    if (foundEmail) throw new ConflictException("Email already in use")
+    if (existing) {
+      if (!existing.is_valid) {
+        const token = this.jwt.create(existing.id, existing.is_valid);
+        await this.mailer.send({ ...existing, token });
+        return;
+      }
 
-    const hashedPass = this.hash.hashData(data.password)
+      throw new ConflictException("Email already in use");
+    }
 
-    const user = await this.prisma.user.create({
-      data: { ...data, hashed_pass: hashedPass }
-    })
+    const hashed = this.hash.hashData(data.password);
 
-    const token = this.jwt.create(user.id, user.is_valid)
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: data.email,
+        hashed_pass: hashed,
+        first_name: data.first_name,
+        last_name: data.last_name,
+      },
+    });
 
-    this.mailer.send({ first_name: user.first_name, token, email: user.email })
-    return;
+    const token = this.jwt.create(newUser.id, newUser.is_valid);
+    await this.mailer.send({ ...newUser, token });
   }
 
-  async login({ email, password }: ILoginUser) {
-    const hasEmail = await this.prisma.user.findUnique({ where: { email } });
-    const isPassequal = this.hash.compareData(hasEmail?.hashed_pass ?? "", password)
 
-    if (!hasEmail || !isPassequal) throw new NotFoundException("Incorrect email or password");
-    if (!hasEmail.is_valid) throw new UnauthorizedException("User is not valid")
+  async login(data: ILoginUser) {
+    const existing = await this.prisma.user.findUnique({
+      where: { email: data.email }
+    });
 
-    const accessToken = this.jwt.create(hasEmail.id, hasEmail.is_valid)
+    const matches = this.hash.compareData(existing?.hashed_pass ?? "", data.password)
+
+    if (!existing?.is_valid || !matches) throw new UnauthorizedException("Incorrect email or password");
+
+    const accessToken = this.jwt.create(existing.id, existing.is_valid)
     return accessToken
   }
 
   async validate(id: string) {
-    const isUserValid = await this.prisma.user.findUnique({ where: { id } })
+    const existing = await this.prisma.user.findUnique({ where: { id } })
 
-    if (isUserValid) throw new UnauthorizedException("This account was already validated")
+    if (existing?.is_valid) return;
 
-    await this.prisma.user.update({
-      where: { id }, data: { is_valid: true }
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { is_valid: true }
     })
+
+    const accessToken = this.jwt.create(user.id, user.is_valid)
+    return accessToken
   }
 
   async findUser(id: string) {

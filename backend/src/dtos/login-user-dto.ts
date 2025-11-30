@@ -7,6 +7,6 @@ export class LoginUserDto {
     email: string
 
     @IsString()
-    @Matches(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[\p{S}\p{P}])[\p{L}\p{Nd}\p{S}\p{P}][^\s]{8,16}$/u)
+    @Matches(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>/?]).{8,16}$/u)
     password: string
 }

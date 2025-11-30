@@ -15,29 +15,19 @@ export class AuthController {
     }
 
     @Post("login")
-    async login(@Req() request: Request, @Req() response: Response, @Body() dto: LoginUserDto) {
+    async login(@Req() request: Request, @Body() dto: LoginUserDto) {
         const accessToken = await this.authService.login(dto);
-        response.cookie("accesstoken", accessToken, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 10,
-            secure: false,
-            sameSite: "lax"
-        })
-    }
-
-    @Post("logout")
-    async logout(@Req() request: Request, @Res() response: Response) {
-        response.clearCookie("accessToken")
+        return accessToken
     }
 
     @Put("validate")
     async validate(@Req() request: any) {
-        await this.authService.validate(request.id);
-        return "Account validated successfully"
+        const accessToken = await this.authService.validate(request.user.id);
+        return accessToken
     }
 
     @Get("user")
     async findUser(@Req() request: any) {
-        return await this.authService.findUser(request.id)
+        return await this.authService.findUser(request.user.id)
     }
 }

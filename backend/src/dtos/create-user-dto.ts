@@ -3,10 +3,10 @@ import { LoginUserDto } from "./login-user-dto"
 
 export class CreateUserdto extends LoginUserDto {
     @IsString()
-    @Matches(/^[a-zA-Z\s]{3,50}$/)
+    @Matches(/^[\p{L}\s'-]{3,50}$/u)
     first_name: string
 
     @IsString()
-    @Matches(/^[a-zA-Z\s]{3,50}$/)
+    @Matches(/^[\p{L}\s'-]{3,50}$/u)
     last_name: string
 }

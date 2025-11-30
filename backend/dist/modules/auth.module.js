@@ -19,7 +19,7 @@ let AuthModule = class AuthModule {
     configure(consumer) {
         consumer
             .apply(auth_middleware_1.AuthMiddleware)
-            .forRoutes({ path: 'auth/user', method: common_1.RequestMethod.GET });
+            .forRoutes({ path: 'auth/user', method: common_1.RequestMethod.GET }, { path: "auth/validate", method: common_1.RequestMethod.PUT });
     }
 };
 exports.AuthModule = AuthModule;

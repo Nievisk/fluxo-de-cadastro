@@ -22,6 +22,6 @@ __decorate([
 ], LoginUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[\p{S}\p{P}])[\p{L}\p{Nd}\p{S}\p{P}][^\s]{8,16}$/u),
+    (0, class_validator_1.Matches)(/^(?=.*\p{L})(?=.*\p{Nd})(?=.*[!@#$%^&*()\-_=+\[\]{};:'",.<>/?]).{8,16}$/u),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "password", void 0);

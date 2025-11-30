@@ -17,11 +17,11 @@ class CreateUserdto extends login_user_dto_1.LoginUserDto {
 exports.CreateUserdto = CreateUserdto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^[a-zA-Z\s]{3,50}$/),
+    (0, class_validator_1.Matches)(/^[\p{L}\s'-]{3,50}$/u),
     __metadata("design:type", String)
 ], CreateUserdto.prototype, "first_name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^[a-zA-Z\s]{3,50}$/),
+    (0, class_validator_1.Matches)(/^[\p{L}\s'-]{3,50}$/u),
     __metadata("design:type", String)
 ], CreateUserdto.prototype, "last_name", void 0);

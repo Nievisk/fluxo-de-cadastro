@@ -8,7 +8,7 @@ export class JwtService {
 
     create(id: string, isValid: boolean) {
         return jwt.sign({ id, isValid }, this.secret, {
-            expiresIn: "10m"
+            expiresIn: "10h"
         })
     }
 

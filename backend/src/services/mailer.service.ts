@@ -10,13 +10,13 @@ type EmailData = {
 export class SendEmailService {
     createtransporter() {
         const transporter = nodemailer.createTransport({
-            host: "smtp.google.com",
+            host: "smtp.gmail.com",
             port: 587,
             secure: false,
             auth: {
                 user: process.env.GOOGLE_USER,
                 pass: process.env.GOOGLE_PASSWORD
-            },
+            }
         })
         return transporter
     };
@@ -25,7 +25,7 @@ export class SendEmailService {
         const transporter = this.createtransporter()
         const template = CreateTemplate({ first_name: data.first_name, token: data.token })
         await transporter.sendMail({
-            from: '"Nievisk" <rafaellsouza03@gmail.email>',
+            from: '"Nievisk" <rafaellsouza03@gmail.com>',
             to: data.email,
             html: template
         })

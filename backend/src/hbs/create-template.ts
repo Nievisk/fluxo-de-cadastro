@@ -9,7 +9,7 @@ type DataType = {
 
 export const CreateTemplate = (data: DataType) => {
     const templatePath = path.join(process.cwd(), 'src/hbs/email-template.hbs')
-    const template = fs.readFileSync(templatePath)
+    const template = fs.readFileSync(templatePath, 'utf8')
     const formedTemplate = hbs.compile(template)
     return formedTemplate(data)
 }

@@ -17,15 +17,15 @@ let AuthMiddleware = class AuthMiddleware {
         this.jwt = jwt;
     }
     use(req, res, next) {
-        var _a;
-        const accesstoken = (_a = req.headers.cookie) === null || _a === void 0 ? void 0 : _a["accessToken"];
+        var _a, _b;
+        const accesstoken = (_b = (_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
         if (!accesstoken)
-            return next(new common_1.UnauthorizedException("Missing access token"));
+            return next(new common_1.UnauthorizedException("Access token is missing"));
         const { id, isValid } = this.jwt.validate(accesstoken);
         const url = req.originalUrl;
         if (!url.includes("validate") && !isValid)
-            return next(new common_1.UnauthorizedException("This account is not verified"));
-        req.body = { id };
+            return next(new common_1.UnauthorizedException("Unauthorized access token"));
+        req.user = { id };
         return next();
     }
 };

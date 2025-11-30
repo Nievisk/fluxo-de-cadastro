@@ -49,7 +49,7 @@ let JwtService = class JwtService {
     }
     create(id, isValid) {
         return jsonwebtoken_1.default.sign({ id, isValid }, this.secret, {
-            expiresIn: "10m"
+            expiresIn: "10h"
         });
     }
     validate(token) {

@@ -23,37 +23,50 @@ let AuthService = class AuthService {
         this.hash = hash;
     }
     async register(data) {
-        const foundEmail = await this.prisma.user.findUnique({
+        const existing = await this.prisma.user.findUnique({
+            where: { email: data.email },
+        });
+        if (existing) {
+            if (!existing.is_valid) {
+                const token = this.jwt.create(existing.id, existing.is_valid);
+                await this.mailer.send({ ...existing, token });
+                return;
+            }
+            throw new common_1.ConflictException("Email already in use");
+        }
+        const hashed = this.hash.hashData(data.password);
+        const newUser = await this.prisma.user.create({
+            data: {
+                email: data.email,
+                hashed_pass: hashed,
+                first_name: data.first_name,
+                last_name: data.last_name,
+            },
+        });
+        const token = this.jwt.create(newUser.id, newUser.is_valid);
+        await this.mailer.send({ ...newUser, token });
+    }
+    async login(data) {
+        var _a;
+        const existing = await this.prisma.user.findUnique({
             where: { email: data.email }
         });
-        if (foundEmail)
-            throw new common_1.ConflictException("Email already in use");
-        const hashedPass = this.hash.hashData(data.password);
-        const user = await this.prisma.user.create({
-            data: { ...data, hashed_pass: hashedPass }
-        });
-        const token = this.jwt.create(user.id, user.is_valid);
-        this.mailer.send({ first_name: user.first_name, token, email: user.email });
-        return;
-    }
-    async login({ email, password }) {
-        var _a;
-        const hasEmail = await this.prisma.user.findUnique({ where: { email } });
-        const isPassequal = this.hash.compareData((_a = hasEmail === null || hasEmail === void 0 ? void 0 : hasEmail.hashed_pass) !== null && _a !== void 0 ? _a : "", password);
-        if (!hasEmail || !isPassequal)
-            throw new common_1.NotFoundException("Incorrect email or password");
-        if (!hasEmail.is_valid)
-            throw new common_1.UnauthorizedException("User is not valid");
-        const accessToken = this.jwt.create(hasEmail.id, hasEmail.is_valid);
+        const matches = this.hash.compareData((_a = existing === null || existing === void 0 ? void 0 : existing.hashed_pass) !== null && _a !== void 0 ? _a : "", data.password);
+        if (!(existing === null || existing === void 0 ? void 0 : existing.is_valid) || !matches)
+            throw new common_1.UnauthorizedException("Incorrect email or password");
+        const accessToken = this.jwt.create(existing.id, existing.is_valid);
         return accessToken;
     }
     async validate(id) {
-        const isUserValid = await this.prisma.user.findUnique({ where: { id } });
-        if (isUserValid)
-            throw new common_1.UnauthorizedException("This account was already validated");
-        await this.prisma.user.update({
-            where: { id }, data: { is_valid: true }
+        const existing = await this.prisma.user.findUnique({ where: { id } });
+        if (existing === null || existing === void 0 ? void 0 : existing.is_valid)
+            return;
+        const user = await this.prisma.user.update({
+            where: { id },
+            data: { is_valid: true }
         });
+        const accessToken = this.jwt.create(user.id, user.is_valid);
+        return accessToken;
     }
     async findUser(id) {
         return await this.prisma.user.findUnique({

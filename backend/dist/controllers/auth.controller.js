@@ -25,24 +25,16 @@ let AuthController = class AuthController {
         await this.authService.register(dto);
         return `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.`;
     }
-    async login(request, response, dto) {
+    async login(request, dto) {
         const accessToken = await this.authService.login(dto);
-        response.cookie("accesstoken", accessToken, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 10,
-            secure: false,
-            sameSite: "lax"
-        });
-    }
-    async logout(request, response) {
-        response.clearCookie("accessToken");
+        return accessToken;
     }
     async validate(request) {
-        await this.authService.validate(request.id);
-        return "Account validated successfully";
+        const accessToken = await this.authService.validate(request.user.id);
+        return accessToken;
     }
     async findUser(request) {
-        return await this.authService.findUser(request.id);
+        return await this.authService.findUser(request.user.id);
     }
 };
 exports.AuthController = AuthController;
@@ -57,20 +49,11 @@ __decorate([
 __decorate([
     (0, common_1.Post)("login"),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Body)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, login_user_dto_1.LoginUserDto]),
+    __metadata("design:paramtypes", [Object, login_user_dto_1.LoginUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
-__decorate([
-    (0, common_1.Post)("logout"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "logout", null);
 __decorate([
     (0, common_1.Put)("validate"),
     __param(0, (0, common_1.Req)()),
