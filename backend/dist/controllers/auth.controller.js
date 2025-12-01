@@ -23,15 +23,14 @@ let AuthController = class AuthController {
     }
     async register(request, dto) {
         await this.authService.register(dto);
-        return `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.`;
+        return { message: `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.` };
     }
     async login(request, dto) {
         const accessToken = await this.authService.login(dto);
-        return accessToken;
+        return { accessToken };
     }
     async validate(request) {
-        const accessToken = await this.authService.validate(request.user.id);
-        return accessToken;
+        await this.authService.validate(request.user.id);
     }
     async findUser(request) {
         return await this.authService.findUser(request.user.id);

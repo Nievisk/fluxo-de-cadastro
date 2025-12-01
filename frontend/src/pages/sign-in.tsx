@@ -7,7 +7,8 @@ import { type ICreateUser } from "../interfaces/icreate-user";
 import { registerSchema } from "../schemas/register-schema";
 import { ImSpinner9 } from "react-icons/im";
 
-export const Register = () => {
+export const SignInPage = () => {
+    const [firstName, setFirstName] = useState()
     const [hideState, setHideState] = useState({
         password: false,
         confirm: false
@@ -15,7 +16,13 @@ export const Register = () => {
 
     const url = import.meta.env.URL || 'http://localhost:3000/auth/register'
 
-    const { register, loading, errors, handleSubmitform } = UseAuth<ICreateUser>(url, registerSchema)
+    const { 
+        register, 
+        loading, 
+        errors, 
+        handleSubmitform,
+        statusCode
+    } = UseAuth<ICreateUser>(url, registerSchema, "/email-sending")
 
     return (
         <section className="h-screen w-screen flex justify-center items-center">
@@ -48,7 +55,7 @@ export const Register = () => {
                         {...register("email")}
                     />
                     {
-                        errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                        (errors.email || statusCode === 409) && <p className="text-red-500 text-xs mt-1">{errors.email?.message || "Email already in use"}</p>
                     }
                 </div>
 
@@ -62,7 +69,7 @@ export const Register = () => {
                     }
                     <div
                         onClick={() => setHideState({ ...hideState, password: !hideState.password })}
-                        className="absolute right-2 bottom-1 text-xl text-gray-500 z-10">
+                        className="absolute right-2 top-2 text-xl text-gray-500 z-10">
                         {
                             hideState.password ?
                                 <IoEyeSharp /> :
@@ -81,7 +88,7 @@ export const Register = () => {
                     }
                     <div
                         onClick={() => setHideState({ ...hideState, confirm: !hideState.confirm })}
-                        className="absolute right-2 bottom-1 text-xl text-gray-500 z-10">
+                        className="absolute right-2 top-2 text-xl text-gray-500 z-10">
                         {
                             hideState.confirm ?
                                 <IoEyeSharp /> :

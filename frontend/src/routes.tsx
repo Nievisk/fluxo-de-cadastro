@@ -1,18 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Register } from "./pages/register"
-import { Login } from "./pages/login"
+import { SignInPage } from "./pages/sign-in"
 import { Congrats } from "./pages/congrats"
-import { Validate } from "./pages/validate"
+import { EmailSentPage } from "./pages/email-sending"
 
 export const AppRouter = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" Component={Congrats} />
+                <Route path="email-sending" Component={EmailSentPage} />
+
                 <Route path="auth">
-                    <Route path="sign-up" Component={Register} />
-                    <Route path="sign-in" Component={Login} />
-                    <Route path="validate" Component={Validate} />
+                    <Route path="sign-up" Component={SignInPage} />
                 </Route>
             </Routes>
         </BrowserRouter>

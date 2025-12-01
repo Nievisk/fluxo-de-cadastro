@@ -1,9 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-export const UseAuth = <T extends FieldValues>(url: string, schema: any) => {
+export const UseAuth = <T extends FieldValues>(
+    url: string,
+    schema: any,
+    redirectUrl: string
+) => {
     const [loading, setLoading] = useState(false)
+    const [statusCode, setStatusCode] = useState<number>()
+
+    const navigate = useNavigate()
 
     const {
         register,
@@ -23,11 +31,14 @@ export const UseAuth = <T extends FieldValues>(url: string, schema: any) => {
         })
 
         if (res.ok) {
+            setLoading(false)
             const data = await res.json()
-            sessionStorage.setItem("accessToken", data.accessToken)
+            if (data?.accessToken) sessionStorage.setItem("accessToken", data.accessToken);
+            navigate(redirectUrl)
         }
         setLoading(false)
+        setStatusCode(res.status)
     })
 
-    return { errors, handleSubmitform, register, loading }
+    return { errors, handleSubmitform, register, loading, statusCode }
 }

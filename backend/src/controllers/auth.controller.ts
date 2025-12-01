@@ -11,19 +11,18 @@ export class AuthController {
     @Post("register")
     async register(@Req() request: Request, @Body() dto: CreateUserdto) {
         await this.authService.register(dto);
-        return `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.`
+        return { message: `Welcome ${dto.first_name}! We sent a confirmation to: ${dto.email}.` }
     }
 
     @Post("login")
     async login(@Req() request: Request, @Body() dto: LoginUserDto) {
         const accessToken = await this.authService.login(dto);
-        return accessToken
+        return { accessToken }
     }
 
     @Put("validate")
     async validate(@Req() request: any) {
-        const accessToken = await this.authService.validate(request.user.id);
-        return accessToken
+        await this.authService.validate(request.user.id);
     }
 
     @Get("user")

@@ -65,13 +65,10 @@ export class AuthService {
 
     if (existing?.is_valid) return;
 
-    const user = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: { id },
       data: { is_valid: true }
     })
-
-    const accessToken = this.jwt.create(user.id, user.is_valid)
-    return accessToken
   }
 
   async findUser(id: string) {

@@ -61,12 +61,10 @@ let AuthService = class AuthService {
         const existing = await this.prisma.user.findUnique({ where: { id } });
         if (existing === null || existing === void 0 ? void 0 : existing.is_valid)
             return;
-        const user = await this.prisma.user.update({
+        await this.prisma.user.update({
             where: { id },
             data: { is_valid: true }
         });
-        const accessToken = this.jwt.create(user.id, user.is_valid);
-        return accessToken;
     }
     async findUser(id) {
         return await this.prisma.user.findUnique({
