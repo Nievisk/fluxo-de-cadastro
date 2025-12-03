@@ -13,9 +13,9 @@ export const SignUpPage = () => {
         confirm: false
     })
 
-    const url = import.meta.env.URL || 'http://localhost:3000/auth/register'
+    const url = `${import.meta.env.BACKEND_URL}/auth/register` || 'http://localhost:3000/auth/register'
 
-    const { 
+    const {
         register, 
         loading, 
         errors, 

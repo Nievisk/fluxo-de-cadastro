@@ -2,7 +2,7 @@ export const Congrats = ({ username }: { username: string }) => {
     return (
         <section className="w-full h-screen flex flex-col items-center justify-center gap-6 text-center p-6">
             <h1 className="text-3xl font-bold">🎉 Login Successful!</h1>
-            <p className="text-base opacity-80\">If you are seeing this page, it means your session is now active.</p>
+            <p className="text-base opacity-80\">Hi {username}! If you are seeing this page, it means your session is now active.</p>
             <button
                 onClick={() => {
                     sessionStorage.removeItem("accessToken");

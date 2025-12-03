@@ -8,7 +8,7 @@ export const AuthComponent = () => {
 
     const handleUser = async () => {
         const token = sessionStorage.getItem("accessToken");
-        const url = import.meta.env.URL || 'http://localhost:3000/auth/user'
+        const url = `${import.meta.env.BACKEND_URL}/auth/user` || 'http://localhost:3000/auth/user'
 
         const res = await fetch(url, {
             method: "GET",

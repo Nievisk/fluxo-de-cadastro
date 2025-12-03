@@ -9,7 +9,7 @@ export const ValidatePage = () => {
   const token = searchParams.get("token")
 
     const handleUserValidation = async () => {
-        const url = import.meta.env.URL || 'http://localhost:3000/auth/validate'
+        const url = `${import.meta.env.BACKEND_URL}/auth/validate` || 'http://localhost:3000/auth/validate'
 
         const res = await fetch(url, {
             method: "PUT",
