@@ -8,7 +8,7 @@ type DataType = {
 }
 
 export const CreateTemplate = (data: DataType) => {
-    const url = `${process.env.FRONTEND_URL || "http://localhost:5173"}/auth/validate`
+    const url = `http://localhost:5173/auth/validate`
 
     const templatePath = path.join(process.cwd(), 'src/hbs/email-template.hbs')
     const template = fs.readFileSync(templatePath, 'utf8')

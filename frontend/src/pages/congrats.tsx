@@ -6,7 +6,7 @@ export const Congrats = ({ username }: { username: string }) => {
             <button
                 onClick={() => {
                     sessionStorage.removeItem("accessToken");
-                    window.location.href = "/";
+                    window.location.href = "/auth/sign-in";
                 }}
                 className="px-5 py-2 rounded-xl shadow text-white bg-gray-400 hover:bg-gray-500 transition"
             >

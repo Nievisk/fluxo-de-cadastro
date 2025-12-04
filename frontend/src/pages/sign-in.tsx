@@ -5,7 +5,7 @@ import { signInSchema } from "../schemas/sign-in-schema";
 import type { ILoginUser } from "../interfaces/ilogin-user";
 
 export const SignInPage = () => {
-    const url = `${import.meta.env.BACKEND_URL}/auth/login` || 'http://localhost:3000/auth/login'
+    const url = 'http://localhost:3000/auth/login'
 
     const {
         register,
