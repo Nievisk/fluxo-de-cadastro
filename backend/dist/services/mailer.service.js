@@ -24,7 +24,7 @@ class SendEmailService {
         const transporter = this.createtransporter();
         const template = (0, create_template_1.CreateTemplate)({ first_name: data.first_name, token: data.token });
         await transporter.sendMail({
-            from: '"Nievisk" <rafaellsouza03@gmail.com>',
+            from: '"Developer" <rafaellsouza03@gmail.com>',
             to: data.email,
             html: template
         });

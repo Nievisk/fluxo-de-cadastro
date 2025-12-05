@@ -25,7 +25,7 @@ export class SendEmailService {
         const transporter = this.createtransporter()
         const template = CreateTemplate({ first_name: data.first_name, token: data.token })
         await transporter.sendMail({
-            from: '"Nievisk" <rafaellsouza03@gmail.com>',
+            from: '"Developer" <rafaellsouza03@gmail.com>',
             to: data.email,
             html: template
         })
